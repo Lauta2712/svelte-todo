@@ -1,9 +1,9 @@
 <script>
   import { tasks } from './store.js';
   import Task from './lib/Task.svelte';
+  import TaskBar from './lib/TaskBar.svelte';
 
   let draggedTaskId = null;
-  let newTask = ''; 
 
   function onDragStart(id) {
     draggedTaskId = id;
@@ -29,26 +29,12 @@
 
     draggedTaskId = null;
   }
-
-  function addTask() {
-    if (newTask.trim()) {
-      tasks.update(t => [...t, { id: Date.now(), text: newTask, completed: false }]);
-      newTask = ''; 
-    }
-  }
-
-  function deleteAllTasks() {
-    tasks.set([]);
-  }
 </script>
 
 <main>
   <h1>Daily</h1>
-  <div class="task-bar">
-    <input type="text" bind:value={newTask} on:keypress={(e) => e.key === 'Enter' && addTask()} />
-    <button on:click={addTask}>Add</button>
-    <button on:click={deleteAllTasks}>Delete All</button>
-  </div>
+
+  <TaskBar/>
 
   <div class="board" on:dragover={onDragOver} on:drop={() => onDrop(null)}>
     {#each $tasks as task (task.id)}
@@ -58,37 +44,18 @@
 </main>
 
 <style>
-  .task-bar {
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-  }
-
-  .task-bar input, .task-bar button {
-    padding: 0.75rem 1rem;
-    font-size: 1rem;
-    border-radius: 8px;
-    border: none;
-    background-color: #444;
-    color: white;
-    transition: background-color 0.3s ease;
-  }
-
-  .task-bar input:focus, .task-bar button:hover {
-    background-color: #555;
-  }
-
   .board {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
     grid-gap: 1rem; 
     width: 90vw;
     height: 70vh; 
-    margin: 0 auto;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2rem;
     background: #333;
     border-radius: 12px;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 2px 2px 10px #555;
     padding: 1rem;
     overflow-y: auto;
   }
